@@ -58,6 +58,8 @@ read_disk:
 	pop bx
 	; to load us into our location memory
 	mov bx, 0x7c00 + 512
+
+	; Now issue the BIOS interrupt to do the actual read.
 	int 0x13
 	; to look at error
 	; look if carry flag has been flipped
@@ -70,7 +72,8 @@ disk_error:
 	call printf
 	jmp $
 	
-
+; 0x0a is \n new line
+; 0x0d is \r carriage return
 STR: db 'Welcome to sauceOS...', 0x0a, 0x0d, 0
 DISK_ERR_MSG: db 'There was an error loading the disk.', 0x0a, 0x0d, 0
 ; padding and the magic number
