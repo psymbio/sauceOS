@@ -31,7 +31,7 @@ print_char:
 	add si, 1
 	jmp str_loop
 		
-STR: db "Welcome to sauceOS", 0
+STR: db "Welcome to sauceOS...", 0
 
 ; padding and the magic number
 times 510-($-$$) db 0
