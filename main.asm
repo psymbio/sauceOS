@@ -51,16 +51,22 @@ main:
 	mov al, 1
 	mov cl, 2
 	call read_disk
+	; mov dx, 0x1234
+	mov dx, [0x7c00 + 510]
+	; call printh
+	call printhh
 	jmp test
 
 	jmp $
 
 	%include "printf.asm"
 	%include "read_disk.asm"
+	%include "printh.asm"
+	%include "printhh.asm"
 
 STR: db 'Welcome to sauceOS:)', 0x0a, 0x0d, 0
 DISK_ERR_MSG: db 'There was an error loading the disk.', 0x0a, 0x0d, 0
-SCND_SCTR: db 'The second sector has been loaded.', 0x0a, 0x0d, 0
+SCND_SCTR: db 'Second sector successfully initialized.', 0x0a, 0x0d, 0
 ; padding and the magic number
 times 510-($-$$) db 0
 dw 0xaa55
