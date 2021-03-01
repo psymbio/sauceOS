@@ -55,38 +55,51 @@ main:
 	mov dx, [0x7c00 + 510]
 	; call printh
 	call printh
-	jmp test
-	mov bp, 0x9000 ; set the stack
-	mov sp, bp
+	; disable the a20 uncomment below 2 lines
+	mov ax, 0x2400
+	int 0x15
+	
+	call testa20
+	mov dx, ax
+	call printh
 
-	mov bx, MSG_REAL_MODE
-	call printf
-	call switch_to_pm
+	call enablea20
+	mov dx, ax
+	call printh
+	jmp test
+	; mov bp, 0x9000 ; set the stack
+	; mov sp, bp
+
+	; mov bx, MSG_REAL_MODE
+	; call printf
+	; call switch_to_pm
 	jmp $
 
 	%include "printf.asm"
 	%include "read_disk.asm"
 	%include "printh.asm"
 	%include "testa20.asm"
-	%include "print_string_pm.asm"
-	%include "switch_to_pm.asm"
-	%include "gdt.asm"
+	%include "enablea20.asm"
+	; %include "print_string_pm.asm"
+	; %include "switch_to_pm.asm"
+	; %include "gdt.asm"
 
 STR: db 'Welcome to sauceOS:)', 0x0a, 0x0d, 0
 DISK_ERR_MSG: db 'There was an error loading the disk.', 0x0a, 0x0d, 0
 SCND_SCTR: db 'Second sector successfully initialized.', 0x0a, 0x0d, 0
-MSG_REAL_MODE: db 'Started in 16-bit Real Mode', 0x0a, 0x0d, 0
-MSG_PROT_MODE: db 'Successfully landed in 32-bit Protected Mode', 0x0a, 0x0d, 0
-
+; MSG_REAL_MODE: db 'Started in 16-bit Real Mode', 0x0a, 0x0d, 0
+; MSG_PROT_MODE: db 'Successfully landed in 32-bit Protected Mode', 0x0a, 0x0d, 0
+NO_A20: db 'Oh shucks, A20 is not enabled', 0x0a, 0x0d, 0
+YES_A20: db 'A20 has been enabled', 0x0a, 0x0d, 0
 ; padding and the magic number
 times 510-($-$$) db 0
 dw 0xaa55
 
-[bits 32]
-BEGIN_PM:
-	mov ebx, MSG_PROT_MODE
-	call print_string_pm
-	jmp $
+; [bits 32]
+; BEGIN_PM:
+;	mov ebx, MSG_PROT_MODE
+;	call print_string_pm
+;	jmp $
 ; checking if we can access the second sector now
 test:
 	mov si, SCND_SCTR
