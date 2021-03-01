@@ -16,7 +16,7 @@ switch_to_pm:
 	; code. This also forces the CPU to flush its cache of
 	; pre - fetched and real - mode decoded instructions , which can cause problems.
 	
-[ bits 32]
+[bits 32]
 ; Initialise registers and the stack once in PM.
 init_pm:
 	mov ax, DATA_SEG
