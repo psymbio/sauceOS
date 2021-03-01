@@ -105,11 +105,11 @@ dw 0xaa55
 second_sector:
 	mov si, SCND_SCTR
 	call printf
-	call checklm
+	call check_long_mode
 	call switch_to_pm
 	; jmp $
 	
-	%include "checklm.asm"
+	%include "check_long_mode.asm"
 	%include "print_string_pm.asm"
         %include "switch_to_pm.asm"
         %include "gdt.asm"

@@ -1,6 +1,6 @@
-checklm:
+check_long_mode:
 	pusha
-	pushfd ; push eflags to the stack
+	pushfd ; pushing eflags to the stack
 	pop eax ; pop eflags from stack to EAX
 	mov ecx, eax ; back up eax in ecx
 	; how can we be using 32 bit registers in real mode?
