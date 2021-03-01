@@ -1,35 +1,30 @@
+; https://stackoverflow.com/questions/1797765/assembly-invalid-effective-address
 printh:
-	mov si, HEX_PATTERN
-	; make a copy of bx in dx so original copy stays
+	push cx
+	push di
+	push bx
+        mov si, HEX_PATTERN
+	mov cl, 12
+	mov di, 2
+	jmp print_hex_char
+
+print_hex_char:
 	mov bx, dx
-	; 0x1234
-	shr bx, 12
-	; add bx, 48: doesn't work all the time
-	; making ascii to text
+	shr bx, cl
+	sub cl, 4
+	and bx, 0x00f
 	mov bx, [bx + HEX_TABLE]
-	; each character is 4 bits we need to shift 3 times: 4 bit x 3 times = 12
-	mov [HEX_PATTERN + 2], bl
+	mov [HEX_PATTERN + di], bl
+	add di, 1
+	cmp di, 6
+	je .exit
+	jmp print_hex_char
 
-	mov bx, dx
-        shr bx, 8
-	and bx, 0x000f
-        mov bx, [bx + HEX_TABLE]
-        mov [HEX_PATTERN + 3], bl
-
-	mov bx, dx
-        shr bx, 4
-        and bx, 0x000f
-        mov bx, [bx + HEX_TABLE]
-        mov [HEX_PATTERN + 4], bl
-
-	mov bx, dx
-        shr bx, 0 
-        and bx, 0x000f
-        mov bx, [bx + HEX_TABLE]
-        mov [HEX_PATTERN + 5], bl
-
+.exit:
 	call printf
+	pop bx
+	pop di
+	pop cx
 	ret
-
-; HEX_PATTERN: db '0x****', 0x0a, 0x0d, 0
-; HEX_TABLE: db '0123456789abcdef'
+HEX_PATTERN: db '0x****', 0x0a, 0x0d, 0
+HEX_TABLE: db '0123456789abcdef'
